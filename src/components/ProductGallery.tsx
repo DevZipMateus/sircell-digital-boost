@@ -1,9 +1,16 @@
-import React from 'react';
-import ProductCard from './ProductCard';
-import CategoryFilter from './CategoryFilter';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import { useProductFilters } from '../hooks/useProductFilters';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import ProductSearch from './ProductSearch';
+import OptimizedProductCard from './OptimizedProductCard';
+import ProductSkeleton from './ProductSkeleton';
+import { InlineLoader, LoadMoreButton, EmptyState } from './LoadingStates';
 
 const ProductGallery = () => {
-  const products = [
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [preloadedImages, setPreloadedImages] = useState(0);
+
+  const products = useMemo(() => [
     {
       id: 1,
       name: "Balança Digital até 500mg",
@@ -172,42 +179,114 @@ const ProductGallery = () => {
       image: "/lovable-uploads/galeria/umidificador_em_formato_de_astronauta_.jpg",
       category: "Eletrônicos"
     }
-  ];
+  ], []);
 
-  const categories = [...new Set(products.map(product => product.category))];
-  const [selectedCategory, setSelectedCategory] = React.useState('Todos');
-  const [filteredProducts, setFilteredProducts] = React.useState(products);
+  const {
+    filters,
+    filteredProducts,
+    categoriesWithCounts,
+    updateSearchQuery,
+    toggleCategory,
+    clearAllFilters,
+    isSearching
+  } = useProductFilters(products);
 
-  React.useEffect(() => {
-    if (selectedCategory === 'Todos') {
-      setFilteredProducts(products);
-    } else {
-      setFilteredProducts(products.filter(product => product.category === selectedCategory));
-    }
-  }, [selectedCategory]);
+  const {
+    displayedItems,
+    isLoading: isLoadingMore,
+    hasMore,
+    loadMore
+  } = useInfiniteScroll({
+    items: filteredProducts,
+    itemsPerPage: 12
+  });
+
+  // Handle image preloading for first 8 products
+  const handleImageLoad = useCallback(() => {
+    setPreloadedImages(prev => prev + 1);
+  }, []);
+
+  // Initial loading simulation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Show initial skeleton loading
+  if (isInitialLoading) {
+    return (
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="mb-8">
+            <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-6 animate-pulse"></div>
+            <div className="h-12 bg-gray-200 rounded-full max-w-md mx-auto mb-8 animate-pulse"></div>
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-8 w-20 bg-gray-200 rounded-full animate-pulse"></div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <ProductSkeleton count={8} />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
-        <CategoryFilter
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+        <ProductSearch
+          searchQuery={filters.searchQuery}
+          onSearchChange={updateSearchQuery}
+          selectedCategories={filters.selectedCategories}
+          onCategoryToggle={toggleCategory}
+          categoriesWithCounts={categoriesWithCounts}
+          onClearAll={clearAllFilters}
+          isSearching={isSearching}
+          totalResults={filteredProducts.length}
         />
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {displayedItems.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {displayedItems.map((product, index) => (
+                <OptimizedProductCard
+                  key={product.id}
+                  product={product}
+                  priority={index < 8} // Prioritize first 8 images
+                  onImageLoad={handleImageLoad}
+                />
+              ))}
+            </div>
 
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
-              Nenhum produto encontrado nesta categoria.
-            </p>
-          </div>
+            {/* Load More or Loading State */}
+            {hasMore || isLoadingMore ? (
+              isLoadingMore ? (
+                <InlineLoader message="Carregando mais produtos..." />
+              ) : (
+                <LoadMoreButton
+                  onClick={loadMore}
+                  isLoading={isLoadingMore}
+                  hasMore={hasMore}
+                />
+              )
+            ) : null}
+          </>
+        ) : (
+          <EmptyState
+            message={
+              filters.searchQuery.trim() || filters.selectedCategories.length > 0
+                ? "Nenhum produto encontrado com os filtros aplicados."
+                : "Nenhum produto disponível no momento."
+            }
+            onReset={clearAllFilters}
+          />
         )}
       </div>
     </section>
