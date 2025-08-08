@@ -201,12 +201,10 @@ const ProductGallery = () => {
     itemsPerPage: 12
   });
 
-  // Handle image preloading for first 8 products
   const handleImageLoad = useCallback(() => {
     setPreloadedImages(prev => prev + 1);
   }, []);
 
-  // Initial loading simulation
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
@@ -218,18 +216,18 @@ const ProductGallery = () => {
   // Show initial skeleton loading
   if (isInitialLoading) {
     return (
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="py-12 md:py-20 bg-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-6 animate-pulse"></div>
-            <div className="h-12 bg-gray-200 rounded-full max-w-md mx-auto mb-8 animate-pulse"></div>
+            <div className="h-6 md:h-8 bg-gray-200 rounded w-48 md:w-64 mx-auto mb-4 md:mb-6 animate-pulse"></div>
+            <div className="h-8 md:h-12 bg-gray-200 rounded-full max-w-sm md:max-w-md mx-auto mb-6 md:mb-8 animate-pulse"></div>
             <div className="flex flex-wrap justify-center gap-2 mb-6">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-8 w-20 bg-gray-200 rounded-full animate-pulse"></div>
+                <div key={i} className="h-6 md:h-8 w-16 md:w-20 bg-gray-200 rounded-full animate-pulse"></div>
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
             <ProductSkeleton count={8} />
           </div>
         </div>
@@ -238,8 +236,8 @@ const ProductGallery = () => {
   }
 
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-4">
+    <section className="py-12 md:py-20 bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <ProductSearch
           searchQuery={filters.searchQuery}
           onSearchChange={updateSearchQuery}
@@ -254,12 +252,12 @@ const ProductGallery = () => {
         {/* Products Grid */}
         {displayedItems.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
               {displayedItems.map((product, index) => (
                 <OptimizedProductCard
                   key={product.id}
                   product={product}
-                  priority={index < 8} // Prioritize first 8 images
+                  priority={index < 8}
                   onImageLoad={handleImageLoad}
                 />
               ))}
