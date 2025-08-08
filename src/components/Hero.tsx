@@ -68,7 +68,7 @@ const Hero = () => {
               </Button>
               <Button variant="outline" size="lg" onClick={() => document.getElementById('sobre')?.scrollIntoView({
               behavior: 'smooth'
-            })} className="border-2 border-white text-white hover:bg-white hover:text-sircell-black px-8 py-4 rounded-full font-semibold text-lg transition-all duration-200 backdrop-blur-sm">
+            })} className="border-2 border-white text-white hover:text-sircell-black px-8 py-4 rounded-full font-semibold text-lg transition-all duration-200 backdrop-blur-sm bg-green-600 hover:bg-green-500">
                 Conheça Nossa História
               </Button>
             </div>
