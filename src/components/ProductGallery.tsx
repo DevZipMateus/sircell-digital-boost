@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import ProductCard from './ProductCard';
+import CategoryFilter from './CategoryFilter';
 
 const ProductGallery = () => {
   const products = [
@@ -188,69 +189,16 @@ const ProductGallery = () => {
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
-        {/* Category Filter */}
-        <div className="text-center mb-12">
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <button
-              onClick={() => setSelectedCategory('Todos')}
-              className={`px-6 py-2 rounded-full transition-colors ${
-                selectedCategory === 'Todos'
-                  ? 'bg-sircell-green text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-sircell-green-light hover:text-white'
-              }`}
-            >
-              Todos
-            </button>
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full transition-colors ${
-                  selectedCategory === category
-                    ? 'bg-sircell-green text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-sircell-green-light hover:text-white'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
+        <CategoryFilter
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {filteredProducts.map((product) => (
-            <Card key={product.id} className="group hover-lift">
-              <CardContent className="p-0">
-                <div className="aspect-square overflow-hidden rounded-t-lg">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-4">
-                  <span className="inline-block px-2 py-1 text-xs bg-sircell-green text-white rounded-full mb-2">
-                    {product.category}
-                  </span>
-                  <h3 className="font-semibold text-lg text-sircell-black mb-2 line-clamp-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Entre em contato para mais informações e preços
-                  </p>
-                  <a
-                    href="https://wa.me/5551999999999?text=Olá! Gostaria de saber mais sobre este produto:"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-full px-4 py-2 bg-sircell-green text-white rounded-lg hover:bg-sircell-green-dark transition-colors"
-                  >
-                    Consultar Preço
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 

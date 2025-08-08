@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import OptimizedImage from './OptimizedImage';
 
 const ProductCarousel = () => {
   const featuredProducts = [
@@ -51,6 +52,7 @@ const ProductCarousel = () => {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [preloadedImages, setPreloadedImages] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,6 +63,24 @@ const ProductCarousel = () => {
 
     return () => clearInterval(interval);
   }, [featuredProducts.length]);
+
+  // Preload current and next images
+  useEffect(() => {
+    const preloadImage = (src: string) => {
+      if (!preloadedImages.has(src)) {
+        const img = new Image();
+        img.src = src;
+        setPreloadedImages(prev => new Set([...prev, src]));
+      }
+    };
+
+    // Preload current image
+    preloadImage(featuredProducts[currentIndex].image);
+    
+    // Preload next image
+    const nextIndex = currentIndex === featuredProducts.length - 1 ? 0 : currentIndex + 1;
+    preloadImage(featuredProducts[nextIndex].image);
+  }, [currentIndex, featuredProducts, preloadedImages]);
 
   const goToPrevious = () => {
     setCurrentIndex(currentIndex === 0 ? featuredProducts.length - 1 : currentIndex - 1);
@@ -93,13 +113,15 @@ const ProductCarousel = () => {
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-              {featuredProducts.map((product) => (
+              {featuredProducts.map((product, index) => (
                 <div key={product.id} className="w-full flex-shrink-0">
                   <div className="aspect-video md:aspect-[16/9] lg:aspect-[21/9] relative">
-                    <img
+                    <OptimizedImage
                       src={product.image}
                       alt={product.name}
                       className="w-full h-full object-cover"
+                      priority={index === 0} // Prioritize first image
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                     />
                     <div className="absolute inset-0 bg-black/40 flex items-end">
                       <div className="p-6 text-white w-full">
