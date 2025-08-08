@@ -7,25 +7,25 @@ import { MapPin, Clock, Phone, Mail } from 'lucide-react';
 const Location = () => {
   const contactInfo = [
     {
-      icon: <MapPin className="w-5 h-5 text-primary" />,
+      icon: <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />,
       label: "Endereço",
       value: "Marechal Floriano 1001",
       action: "Ver no Mapa"
     },
     {
-      icon: <Phone className="w-5 h-5 text-primary" />,
+      icon: <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />,
       label: "Telefone",
       value: "(54) 9 8101-4238",
       action: "Ligar Agora"
     },
     {
-      icon: <Mail className="w-5 h-5 text-primary" />,
+      icon: <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />,
       label: "E-mail",
       value: "sircell27@gmail.com",
       action: "Enviar E-mail"
     },
     {
-      icon: <Clock className="w-5 h-5 text-primary" />,
+      icon: <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />,
       label: "Funcionamento",
       value: "Seg à Sex: 8h às 18h",
       action: null
@@ -45,34 +45,34 @@ const Location = () => {
   };
 
   return (
-    <section id="localizacao" className="py-20 bg-sircell-gray">
+    <section id="localizacao" className="py-12 sm:py-16 lg:py-20 bg-sircell-gray">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl font-bold text-sircell-black mb-4">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16 animate-fade-in">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-sircell-black mb-2 sm:mb-4">
             Nossa <span className="text-gradient">Localização</span>
           </h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground px-4">
             Venha nos visitar! Estamos sempre prontos para atendê-lo com qualidade e agilidade.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-start">
           {/* Contact Information */}
-          <div className="space-y-6 animate-slide-up">
-            <h3 className="text-2xl font-bold text-sircell-black mb-6">
+          <div className="space-y-4 sm:space-y-6 animate-slide-up order-2 lg:order-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-sircell-black mb-4 sm:mb-6">
               Informações de Contato
             </h3>
             
             {contactInfo.map((info, index) => (
-              <Card key={index} className="p-6 bg-white hover-lift transition-all duration-300 border-0 shadow-md hover:shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <Card key={index} className="p-4 sm:p-6 bg-white hover-lift transition-all duration-300 border-0 shadow-md hover:shadow-lg">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                  <div className="flex items-center space-x-3 sm:space-x-4">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
                       {info.icon}
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground font-medium">{info.label}</p>
-                      <p className="text-lg font-semibold text-sircell-black">{info.value}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs sm:text-sm text-muted-foreground font-medium">{info.label}</p>
+                      <p className="text-sm sm:text-lg font-semibold text-sircell-black break-words">{info.value}</p>
                     </div>
                   </div>
                   {info.action && (
@@ -84,7 +84,7 @@ const Location = () => {
                         info.label === 'Telefone' ? makeCall :
                         sendEmail
                       }
-                      className="border-primary text-primary hover:bg-primary hover:text-white"
+                      className="border-primary text-primary hover:bg-primary hover:text-white w-full sm:w-auto text-xs sm:text-sm flex-shrink-0"
                     >
                       {info.action}
                     </Button>
@@ -93,11 +93,11 @@ const Location = () => {
               </Card>
             ))}
 
-            <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10">
-              <h4 className="text-lg font-bold text-sircell-black mb-2">
+            <div className="bg-primary/5 p-4 sm:p-6 rounded-2xl border border-primary/10">
+              <h4 className="text-base sm:text-lg font-bold text-sircell-black mb-2">
                 💡 Dica Importante
               </h4>
-              <p className="text-muted-foreground">
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Antes de vir até nossa loja, entre em contato conosco para confirmar disponibilidade 
                 e agilizar seu atendimento!
               </p>
@@ -105,7 +105,7 @@ const Location = () => {
           </div>
 
           {/* Map */}
-          <div className="animate-scale-in">
+          <div className="animate-scale-in order-1 lg:order-2">
             <Card className="overflow-hidden shadow-2xl border-0">
               <div className="aspect-video bg-primary/5 flex items-center justify-center relative">
                 <iframe
@@ -119,18 +119,18 @@ const Location = () => {
                   className="absolute inset-0"
                 ></iframe>
                 
-                <div className="absolute top-4 left-4 bg-white px-4 py-2 rounded-full shadow-lg">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                    <span className="text-sm font-medium text-sircell-black">Sircell</span>
+                <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-white px-2 sm:px-4 py-1 sm:py-2 rounded-full shadow-lg">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-primary rounded-full animate-pulse"></div>
+                    <span className="text-xs sm:text-sm font-medium text-sircell-black">Sircell</span>
                   </div>
                 </div>
               </div>
               
-              <div className="p-6 bg-white">
+              <div className="p-4 sm:p-6 bg-white">
                 <Button 
                   onClick={openMap}
-                  className="w-full bg-primary hover:bg-primary-hover text-white rounded-full font-semibold transition-all duration-200 hover:transform hover:scale-105"
+                  className="w-full bg-primary hover:bg-primary-hover text-white rounded-full font-semibold transition-all duration-200 hover:transform hover:scale-105 text-sm sm:text-base"
                 >
                   Abrir no Google Maps
                 </Button>
