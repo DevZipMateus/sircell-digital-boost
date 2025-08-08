@@ -88,7 +88,7 @@ const Hero = () => {
 
           {/* Hero Image */}
           <div className="relative animate-scale-in">
-            <div className="relative bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-8 hover-lift border border-white/20">
+            <div className="relative bg-white/47 rounded-3xl shadow-2xl p-8 hover-lift border border-white/20">
               <img 
                 src="/lovable-uploads/a88afc1d-df3f-416e-b841-a6b20a8057e4.png" 
                 alt="Sircell - Assistência Técnica de Eletrônicos" 
