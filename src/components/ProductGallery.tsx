@@ -210,17 +210,18 @@ const ProductGallery = () => {
     loadMore
   } = useInfiniteScroll({
     items: filteredProducts,
-    itemsPerPage: isMobile ? 8 : 12
+    itemsPerPage: isMobile ? 6 : 12
   });
 
   const handleImageLoad = useCallback(() => {
     setPreloadedImages(prev => prev + 1);
   }, []);
 
+  // Reduzir tempo de loading inicial em mobile
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
-    }, isMobile ? 400 : 800);
+    }, isMobile ? 200 : 600);
 
     return () => clearTimeout(timer);
   }, [isMobile]);
@@ -239,7 +240,7 @@ const ProductGallery = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-            <ProductSkeleton count={isMobile ? 6 : 8} />
+            <ProductSkeleton count={isMobile ? 4 : 8} />
           </div>
         </div>
       </section>
@@ -268,7 +269,7 @@ const ProductGallery = () => {
                 <OptimizedProductCard
                   key={product.id}
                   product={product}
-                  priority={index < (isMobile ? 4 : 8)}
+                  priority={index < (isMobile ? 6 : 8)}
                   onImageLoad={handleImageLoad}
                 />
               ))}
