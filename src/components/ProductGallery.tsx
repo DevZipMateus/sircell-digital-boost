@@ -9,6 +9,18 @@ import { InlineLoader, LoadMoreButton, EmptyState } from './LoadingStates';
 const ProductGallery = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [preloadedImages, setPreloadedImages] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const products = useMemo(() => [
     {
@@ -198,7 +210,7 @@ const ProductGallery = () => {
     loadMore
   } = useInfiniteScroll({
     items: filteredProducts,
-    itemsPerPage: 12
+    itemsPerPage: isMobile ? 8 : 12
   });
 
   const handleImageLoad = useCallback(() => {
@@ -208,12 +220,11 @@ const ProductGallery = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
-    }, 800);
+    }, isMobile ? 400 : 800);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isMobile]);
 
-  // Show initial skeleton loading
   if (isInitialLoading) {
     return (
       <section className="py-12 md:py-20 bg-background">
@@ -228,7 +239,7 @@ const ProductGallery = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-            <ProductSkeleton count={8} />
+            <ProductSkeleton count={isMobile ? 6 : 8} />
           </div>
         </div>
       </section>
@@ -257,7 +268,7 @@ const ProductGallery = () => {
                 <OptimizedProductCard
                   key={product.id}
                   product={product}
-                  priority={index < 8}
+                  priority={index < (isMobile ? 4 : 8)}
                   onImageLoad={handleImageLoad}
                 />
               ))}
