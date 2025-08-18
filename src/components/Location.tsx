@@ -27,7 +27,7 @@ const Location = () => {
     {
       icon: <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />,
       label: "Funcionamento",
-      value: "Seg a Sex: 9h às 18:30 (sem fechar meio dia) | Sáb: 9h às 12h",
+      value: "Seg a Sex: 9h às 18:30 (sem fechar meio dia) | Sáb: 9h às 15h",
       action: null
     }
   ];
