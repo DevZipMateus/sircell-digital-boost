@@ -1,5 +1,5 @@
 
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import LazyImage from './LazyImage';
 
@@ -21,14 +21,9 @@ const OptimizedProductCard: React.FC<ProductCardProps> = memo(({
   priority = false,
   onImageLoad 
 }) => {
-  const [isMobile] = useState(() => window.innerWidth <= 768);
-
-  console.log('ProductCard - Mobile:', isMobile, 'Priority:', priority, 'Product:', product.name);
-
   const handleImageLoad = useCallback(() => {
     onImageLoad?.();
-    console.log('ProductCard image loaded:', product.name);
-  }, [onImageLoad, product.name]);
+  }, [onImageLoad]);
 
   const handleWhatsAppClick = useCallback(() => {
     const message = encodeURIComponent(
@@ -49,9 +44,9 @@ const OptimizedProductCard: React.FC<ProductCardProps> = memo(({
             src={product.image}
             alt={product.name}
             className="w-full h-full transition-all duration-300 group-hover:scale-105"
-            sizes={isMobile ? '100vw' : '(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw'}
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             onLoad={handleImageLoad}
-            priority={priority || isMobile}
+            priority={priority}
           />
           
           {/* Category badge overlay */}

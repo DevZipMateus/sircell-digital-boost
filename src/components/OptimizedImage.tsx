@@ -27,14 +27,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [isMobile] = useState(() => window.innerWidth <= 768);
-  
-  console.log('OptimizedImage - Mobile:', isMobile, 'Priority:', priority, 'Loading:', priority || isMobile ? 'eager' : 'lazy', 'Src:', src);
 
   const handleLoad = () => {
     setIsLoaded(true);
     onLoad?.();
-    console.log('OptimizedImage loaded successfully:', src);
   };
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -64,12 +60,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         width={width}
         height={height}
         sizes={sizes}
-        className={`w-full h-full object-cover transition-opacity duration-200 ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        } ${className}`}
+        className={`w-full h-full object-cover ${className}`}
         onLoad={handleLoad}
         onError={handleError}
-        loading={priority || isMobile ? 'eager' : 'lazy'}
+        loading={priority ? 'eager' : 'lazy'}
         decoding="async"
         style={{
           maxWidth: '100%',

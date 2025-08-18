@@ -97,13 +97,6 @@
     padding-right: 0.5rem;
   }
   
-  /* Força imagens a aparecerem em telas de 4 polegadas */
-  img {
-    max-width: 100% !important;
-    height: auto !important;
-    display: block !important;
-  }
-  
   /* Previne overflow horizontal */
   body, html {
     overflow-x: hidden;
@@ -113,25 +106,6 @@
   .carousel-container {
     overflow: hidden;
     position: relative;
-  }
-}
-
-@media (min-width: 320px) and (max-width: 375px) {
-  /* Breakpoint específico para iPhone SE e similares */
-  .aspect-video {
-    aspect-ratio: 4/3 !important;
-  }
-  
-  /* Força eager loading em telas pequenas */
-  img[loading="lazy"] {
-    loading: eager;
-  }
-}
-
-@media (min-width: 375px) and (max-width: 480px) {
-  /* Breakpoint para phones maiores */
-  .xs\:flex {
-    display: flex;
   }
 }
 
@@ -243,45 +217,4 @@
 .animate-on-scroll.animate {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* Correções específicas para imagens em mobile */
-@media (max-width: 480px) {
-  /* Força todas as imagens a carregarem eagerly em mobile */
-  img[loading="lazy"] {
-    loading: eager !important;
-  }
-  
-  /* Previne problemas de aspect ratio */
-  .aspect-video,
-  .aspect-square {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .aspect-video::before,
-  .aspect-square::before {
-    content: '';
-    display: block;
-    width: 100%;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-  }
-  
-  .aspect-square::before {
-    padding-bottom: 100%; /* 1:1 aspect ratio */
-  }
-  
-  /* Garante que o carrossel não saia da tela */
-  .carousel-slide {
-    min-width: 0;
-    flex-shrink: 0;
-  }
-}
-
-/* Debug styles para desenvolvimento */
-@media (max-width: 480px) {
-  .debug-mobile {
-    border: 2px solid red !important;
-    background: rgba(255, 0, 0, 0.1) !important;
-  }
 }
