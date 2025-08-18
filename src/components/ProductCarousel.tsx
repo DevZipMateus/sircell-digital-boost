@@ -53,16 +53,28 @@ const ProductCarousel = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [preloadedImages, setPreloadedImages] = useState<Set<string>>(new Set());
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => 
         prevIndex === featuredProducts.length - 1 ? 0 : prevIndex + 1
       );
-    }, 3000);
+    }, isMobile ? 4000 : 3000); // Mais tempo em mobile
 
     return () => clearInterval(interval);
-  }, [featuredProducts.length]);
+  }, [featuredProducts.length, isMobile]);
 
   // Preload current and next images
   useEffect(() => {
@@ -70,6 +82,7 @@ const ProductCarousel = () => {
       if (!preloadedImages.has(src)) {
         const img = new Image();
         img.src = src;
+        img.onload = () => console.log('Preloaded:', src); // Debug log
         setPreloadedImages(prev => new Set([...prev, src]));
       }
     };
@@ -95,43 +108,50 @@ const ProductCarousel = () => {
   };
 
   return (
-    <section id="produtos" className="py-20 bg-gradient-to-br from-gray-50 to-white">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-sircell-black mb-4">
+    <section id="produtos" className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white">
+      <div className="container mx-auto px-2 sm:px-4">
+        <div className="text-center mb-6 sm:mb-8 md:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-sircell-black mb-2 sm:mb-4">
             Um Pouco de Nossos Produtos
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6 md:mb-8 px-4">
             Confira alguns dos produtos disponíveis em nossa loja
           </p>
         </div>
 
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative max-w-full sm:max-w-3xl md:max-w-4xl mx-auto">
           {/* Main Carousel */}
-          <div className="relative overflow-hidden rounded-lg shadow-2xl">
+          <div className="relative overflow-hidden rounded-lg shadow-lg sm:shadow-xl md:shadow-2xl">
             <div 
               className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              style={{ 
+                transform: `translateX(-${currentIndex * 100}%)`,
+                width: `${featuredProducts.length * 100}%`
+              }}
             >
               {featuredProducts.map((product, index) => (
-                <div key={product.id} className="w-full flex-shrink-0">
-                  <div className="aspect-video md:aspect-[16/9] lg:aspect-[21/9] relative">
+                <div 
+                  key={product.id} 
+                  className="w-full flex-shrink-0"
+                  style={{ width: `${100 / featuredProducts.length}%` }}
+                >
+                  <div className="aspect-[4/3] sm:aspect-video md:aspect-[16/9] lg:aspect-[21/9] relative">
                     <OptimizedImage
                       src={product.image}
                       alt={product.name}
                       className="w-full h-full object-cover"
-                      priority={index === 0} // Prioritize first image
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      priority={index === 0}
+                      sizes="(max-width: 320px) 100vw, (max-width: 480px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                     />
                     <div className="absolute inset-0 bg-black/40 flex items-end">
-                      <div className="p-6 text-white w-full">
-                        <span className="inline-block px-3 py-1 text-sm bg-sircell-green rounded-full mb-2">
+                      <div className="p-3 sm:p-4 md:p-6 text-white w-full">
+                        <span className="inline-block px-2 py-1 text-xs sm:text-sm bg-sircell-green rounded-full mb-1 sm:mb-2">
                           {product.category}
                         </span>
-                        <h3 className="text-2xl md:text-3xl font-bold mb-2">
+                        <h3 className="text-sm sm:text-lg md:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2 leading-tight">
                           {product.name}
                         </h3>
-                        <p className="text-lg opacity-90">
+                        <p className="text-xs sm:text-sm md:text-base lg:text-lg opacity-90 hidden sm:block">
                           Entre em contato para mais informações
                         </p>
                       </div>
@@ -141,32 +161,32 @@ const ProductCarousel = () => {
               ))}
             </div>
 
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows - Hidden on very small screens */}
             <Button
               variant="ghost"
               size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-sircell-black rounded-full"
+              className="absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-sircell-black rounded-full w-8 h-8 sm:w-10 sm:h-10 hidden xs:flex"
               onClick={goToPrevious}
             >
-              <ChevronLeft className="h-6 w-6" />
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
             </Button>
             
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-sircell-black rounded-full"
+              className="absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-sircell-black rounded-full w-8 h-8 sm:w-10 sm:h-10 hidden xs:flex"
               onClick={goToNext}
             >
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
             </Button>
           </div>
 
           {/* Dots Indicator */}
-          <div className="flex justify-center mt-6 space-x-2">
+          <div className="flex justify-center mt-4 sm:mt-6 space-x-1 sm:space-x-2">
             {featuredProducts.map((_, index) => (
               <button
                 key={index}
-                className={`w-3 h-3 rounded-full transition-colors ${
+                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
                   index === currentIndex ? 'bg-sircell-green' : 'bg-gray-300'
                 }`}
                 onClick={() => goToSlide(index)}
@@ -176,10 +196,10 @@ const ProductCarousel = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-8 sm:mt-10 md:mt-12">
           <Link
             to="/catalogo"
-            className="inline-flex items-center justify-center px-8 py-3 bg-sircell-green text-white rounded-full hover:bg-sircell-green-dark transition-colors text-lg font-semibold"
+            className="inline-flex items-center justify-center px-6 sm:px-8 py-2 sm:py-3 bg-sircell-green text-white rounded-full hover:bg-sircell-green-dark transition-colors text-sm sm:text-base md:text-lg font-semibold"
           >
             Ver Catálogo Completo
           </Link>
