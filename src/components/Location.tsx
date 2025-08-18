@@ -33,7 +33,7 @@ const Location = () => {
   ];
 
   const openMap = () => {
-    window.open('https://maps.app.goo.gl/ozdcieJQWvuu8W7K7?g_st=ipc', '_blank');
+    window.open('https://www.google.com/maps/place/R.+Mal.+Floriano,+1001+-+Pio+X,+Caxias+do+Sul+-+RS,+95020-370', '_blank');
   };
 
   const makeCall = () => {
@@ -109,7 +109,7 @@ const Location = () => {
             <Card className="overflow-hidden shadow-xl border-0">
               <div className="aspect-video bg-primary/5 flex items-center justify-center relative">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3348.7!2d-50.0!3d-28.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDAwJzAwLjAiUyA1MMKwMDAnMDAuMCJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3510.1234567890!2d-51.1788891!3d-29.1631234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sR.%20Mal.%20Floriano%2C%201001%20-%20Pio%20X%2C%20Caxias%20do%20Sul%20-%20RS%2C%2095020-370!5e0!3m2!1spt-BR!2sbr!4v1640995200000!5m2!1spt-BR!2sbr"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
