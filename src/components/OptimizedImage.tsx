@@ -28,6 +28,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isMobile] = useState(() => window.innerWidth <= 768);
+  
+  console.log('OptimizedImage - Mobile:', isMobile, 'Priority:', priority, 'Loading:', priority || isMobile ? 'eager' : 'lazy', 'Src:', src);
 
   const handleLoad = () => {
     setIsLoaded(true);
@@ -62,7 +64,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         width={width}
         height={height}
         sizes={sizes}
-        className={`transition-opacity duration-200 ${
+        className={`w-full h-full object-cover transition-opacity duration-200 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         } ${className}`}
         onLoad={handleLoad}

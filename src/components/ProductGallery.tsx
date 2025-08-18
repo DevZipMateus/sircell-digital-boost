@@ -8,19 +8,9 @@ import { InlineLoader, LoadMoreButton, EmptyState } from './LoadingStates';
 
 const ProductGallery = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [preloadedImages, setPreloadedImages] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile] = useState(() => window.innerWidth <= 768);
 
-  // Detectar mobile
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  console.log('ProductGallery - Mobile detected:', isMobile);
 
   const products = useMemo(() => [
     {
@@ -214,14 +204,15 @@ const ProductGallery = () => {
   });
 
   const handleImageLoad = useCallback(() => {
-    setPreloadedImages(prev => prev + 1);
+    console.log('Image loaded in gallery');
   }, []);
 
-  // Reduzir tempo de loading inicial em mobile
+  // Reduzir drasticamente o tempo de loading inicial em mobile
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
-    }, isMobile ? 200 : 600);
+      console.log('Initial loading finished');
+    }, isMobile ? 100 : 300);
 
     return () => clearTimeout(timer);
   }, [isMobile]);
@@ -269,7 +260,7 @@ const ProductGallery = () => {
                 <OptimizedProductCard
                   key={product.id}
                   product={product}
-                  priority={index < (isMobile ? 6 : 8)}
+                  priority={index < (isMobile ? 8 : 8) || isMobile}
                   onImageLoad={handleImageLoad}
                 />
               ))}
